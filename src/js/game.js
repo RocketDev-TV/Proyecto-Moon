@@ -1,6 +1,8 @@
 // =====================================================================
-// NÚCLEO OPERATIVO DEL JUEGO: MOON ARCADE MOTOR (HARDCORE SCALING)
+// 🌙 NÚCLEO OPERATIVO DEL JUEGO: MOON ARCADE MOTOR (FINAL SECURE EDITION)
 // =====================================================================
+(function() {
+
 const config = {
     type: Phaser.AUTO,
     width: 800,
@@ -103,7 +105,6 @@ GameScene.prototype = Object.create(Phaser.Scene.prototype);
 GameScene.prototype.constructor = GameScene;
 
 GameScene.prototype.preload = function() {
-    // Sprites del personaje y consumibles (viven en src/assets/)
     this.load.spritesheet('aylin', 'src/assets/aylin.png', { frameWidth: 24, frameHeight: 24 });
     this.load.image('zorro', 'src/assets/items/zorro.png');
     this.load.image('sally', 'src/assets/items/sally.png');
@@ -111,7 +112,6 @@ GameScene.prototype.preload = function() {
     this.load.image('gomita', 'src/assets/items/manzana.png');
     this.load.image('uno', 'src/assets/items/uno.png');
 
-    // Escenografía del mundo (viven en la carpeta img/ de la raíz)
     this.load.image('suelo_base', 'img/mundo/FloatingIslands_Assets/AssetsPink/GroundTile2_Ground.png');
     this.load.image('arbol_rosa1', 'img/mundo/FloatingIslands_Assets/AssetsPink/Tree1.png');
     this.load.image('arbol_rosa3', 'img/mundo/FloatingIslands_Assets/AssetsPink/Tree3.png');
@@ -124,7 +124,6 @@ GameScene.prototype.preload = function() {
     this.load.image('edificio', 'img/mundo/FloatingIslands_Assets/AssetsPink/Building1_Front.png');
     this.load.image('planta5', 'img/mundo/FloatingIslands_Assets/AssetsPink/Plant5.png');
 
-    // Banda sonora (vive en src/music/)
     this.load.audio('mammamia', 'src/music/mammamia8bits.mp3');
 };
 
@@ -293,25 +292,17 @@ GameScene.prototype.updateClock = function() {
     if (this.timeLeft <= 0) { this.spawnTimer.remove(); this.countdownTimer.remove(); this.scene.start('WinScene', { finalScore: this.score, levelReached: this.currentLevel }); }
 };
 
-// =====================================================================
-// REINGENIERÍA DE TRANSICIÓN: SISTEMA HARDCORE COMPUESTO
-// =====================================================================
 GameScene.prototype.nextLevelTransition = function() {
     this.currentLevel++;
-    
-    // 1. TIME DECAY: Reduce 4 segundos por nivel, con un piso mínimo de 15s para que sea jugable
     this.timeLeft = Math.max(45 - (this.currentLevel - 1) * 4, 15); 
-    
-    // 2. ESCALADO DE METAS: El escalón crece +50 puntos adicionales cada nivel (100, 250, 450, 700...)
     let brechaNivel = 100 + ((this.currentLevel - 1) * 50);
     this.targetScore = this.targetScore + brechaNivel; 
-    
     this.cameras.main.flash(150, 107, 255, 184);
     this.hudText.setText(`PUNTOS: ${this.score}/${this.targetScore} | LVL: ${this.currentLevel}`);
 };
 
 // =====================================================================
-// ESCENA 3: PANTALLA DE RESULTADOS FINALES
+// 🎬 ESCENA 3: PANTALLA DE RESULTADOS FINALES (SECURE VAULT MODE)
 // =====================================================================
 function WinScene() { Phaser.Scene.call(this, { key: 'WinScene' }); }
 WinScene.prototype = Object.create(Phaser.Scene.prototype);
@@ -342,10 +333,37 @@ WinScene.prototype.create = function() {
     const retryBtn = this.add.text(400, 490, '< VOLVER A JUGAR >', { fontFamily: '"Press Start 2P"', fontSize: '11px', fill: '#ffffff' }).setOrigin(0.5).setInteractive();
     retryBtn.on('pointerdown', () => this.scene.start('GameScene'));
 
+    // 🔒 100% CORREGIDO: Removido 'window.' de la llamada de Supabase para enlazar de forma nativa a la instancia remota
     const btnSecreto = this.add.text(770, 560, '[ 🔑 ]', { fontFamily: '"Press Start 2P"', fontSize: '10px', fill: '#2a1f4d' }).setOrigin(1, 1).setInteractive();
     btnSecreto.on('pointerdown', () => {
-        abrirPromptArcade('🔒 BÓVEDA', 'Introduce el código', (llave) => {
-            if (llave && llave.toLowerCase().trim() === '4yl1n007') this.scene.start('BirthdayScene');
+        if (localStorage.getItem('vault_permanently_locked') === 'true') {
+            abrirPromptArcade('🚨 ACCESO DENEGADO', 'SISTEMA BLOQUEADO PERMANENTEMENTE.', () => {});
+            return;
+        }
+
+        abrirPromptArcade('🔒', 'Introduce el código de acceso remoto:', async (llave) => {
+            if (!llave || llave.trim() === '') return;
+
+            if (supabaseClient) {
+                const { data, error } = await supabaseClient.rpc('check_vault_code', { 
+                    input_code: llave.toLowerCase().trim() 
+                });
+
+                if (!error && data !== null) {
+                    localStorage.setItem('vault_fail_attempts', '0');
+                    this.scene.start('BirthdayScene', { cartaRemota: data });
+                } else {
+                    let fallos = parseInt(localStorage.getItem('vault_fail_attempts') || '0') + 1;
+                    localStorage.setItem('vault_fail_attempts', fallos.toString());
+
+                    if (fallos >= 3) {
+                        localStorage.setItem('vault_permanently_locked', 'true');
+                        abrirPromptArcade('🚨 DISPOSITIVO BLOQUEADO', 'EXCESO DE INTENTOS. CONTACTA AL ADMINISTRADOR.', () => {});
+                    } else {
+                        abrirPromptArcade('❌ ERROR DE LLAVE', `CÓDIGO INVÁLIDO. INTENTOS RESTANTES: ${3 - fallos}/3`, () => {});
+                    }
+                }
+            }
         });
     });
 };
@@ -374,11 +392,15 @@ LeaderboardScene.prototype.create = function() {
 };
 
 // =====================================================================
-// ESCENA OCULTA 5: PANTALLA DE CUMPLE
+// ESCENA OCULTA 5: PANTALLA DE CUMPLE (SECURE CODES)
 // =====================================================================
 function BirthdayScene() { Phaser.Scene.call(this, { key: 'BirthdayScene' }); }
 BirthdayScene.prototype = Object.create(Phaser.Scene.prototype);
 BirthdayScene.prototype.constructor = BirthdayScene;
+
+BirthdayScene.prototype.init = function(data) { 
+    this.cartaSopresa = data.cartaRemota || "Error crítico: No se pudo verificar el paquete de datos."; 
+};
 
 BirthdayScene.prototype.create = function() {
     this.cameras.main.setBackgroundColor('#000000');
@@ -389,17 +411,10 @@ BirthdayScene.prototype.create = function() {
     }
 
     this.add.text(400, 130, '¡FELIZ CUMPLEAÑOS, FLACA! 🎂🎉', { fontFamily: '"Press Start 2P"', fontSize: '20px', fill: '#ffffff', align: 'center' }).setOrigin(0.5);
-    let textoCarta = 
-        "Llegaste al final del juego y a un rincón secreto...\n\n" +
-        "Quería hacer algo especial y único para celebrar tu día.\n" +
-        "Espero la pases increible hoy y siempre, que tu vida este\n" +
-        "llena de cosas positiivas y sobre todo de mucha paz y\n" +
-        "amor en tu corazon.\n\n" +
-        "Feliz vuelta al sol.🌞\n\n" +
-        "Tqm Moon.🌙\n\n" +
-        "- Ivan.";
-
-    this.add.text(400, 360, textoCarta, { fontFamily: '"Press Start 2P"', fontSize: '10px', fill: '#ffb3d9', align: 'center', lineHeight: 1.9 }).setOrigin(0.5);
+    this.add.text(400, 360, this.cartaSopresa, { fontFamily: '"Press Start 2P"', fontSize: '10px', fill: '#ffb3d9', align: 'center', lineHeight: 1.9 }).setOrigin(0.5);
+    
     const salirOculto = this.add.text(400, 540, '< CERRAR >', { fontFamily: '"Press Start 2P"', fontSize: '9px', fill: '#555555' }).setOrigin(0.5).setInteractive();
     salirOculto.on('pointerdown', () => this.scene.start('MenuScene'));
 };
+
+})();
