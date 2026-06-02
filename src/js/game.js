@@ -103,24 +103,29 @@ GameScene.prototype = Object.create(Phaser.Scene.prototype);
 GameScene.prototype.constructor = GameScene;
 
 GameScene.prototype.preload = function() {
-    this.load.spritesheet('aylin', '../assets/aylin.png', { frameWidth: 24, frameHeight: 24 });
-    this.load.image('zorro', '../assets/items/zorro.png');
-    this.load.image('sally', '../assets/items/sally.png');
-    this.load.image('bts', '../assets/items/BTS.png');
-    this.load.image('gomita', '../assets/items/manzana.png');
-    this.load.image('uno', '../assets/items/uno.png');
-    this.load.image('suelo_base', '../../img/mundo/FloatingIslands_Assets/AssetsPink/GroundTile2_Ground.png');
-    this.load.image('arbol_rosa1', '../../img/mundo/FloatingIslands_Assets/AssetsPink/Tree1.png');
-    this.load.image('arbol_rosa3', '../../img/mundo/FloatingIslands_Assets/AssetsPink/Tree3.png');
-    this.load.image('arbusto1', '../../img/mundo/FloatingIslands_Assets/AssetsPink/BackgroundBushes1.png');
-    this.load.image('arbusto4', '../../img/mundo/FloatingIslands_Assets/AssetsPink/BackgroundBushes4.png');
-    this.load.image('poste', '../../img/mundo/FloatingIslands_Assets/AssetsPink/Pole.png');
-    this.load.image('puente_izq', '../../img/mundo/FloatingIslands_Assets/AssetsPink/BridgeLeft.png');
-    this.load.image('puente_cen', '../../img/mundo/FloatingIslands_Assets/AssetsPink/BridgeMiddle.png');
-    this.load.image('puente_der', '../../img/mundo/FloatingIslands_Assets/AssetsPink/BridgeRight.png');
-    this.load.image('edificio', '../../img/mundo/FloatingIslands_Assets/AssetsPink/Building1_Front.png');
-    this.load.image('planta5', '../../img/mundo/FloatingIslands_Assets/AssetsPink/Plant5.png');
-    this.load.audio('mammamia', '../music/mammamia8bits.mp3');
+    // Sprites del personaje y consumibles (viven en src/assets/)
+    this.load.spritesheet('aylin', 'src/assets/aylin.png', { frameWidth: 24, frameHeight: 24 });
+    this.load.image('zorro', 'src/assets/items/zorro.png');
+    this.load.image('sally', 'src/assets/items/sally.png');
+    this.load.image('bts', 'src/assets/items/BTS.png');
+    this.load.image('gomita', 'src/assets/items/manzana.png');
+    this.load.image('uno', 'src/assets/items/uno.png');
+
+    // Escenografía del mundo (viven en la carpeta img/ de la raíz)
+    this.load.image('suelo_base', 'img/mundo/FloatingIslands_Assets/AssetsPink/GroundTile2_Ground.png');
+    this.load.image('arbol_rosa1', 'img/mundo/FloatingIslands_Assets/AssetsPink/Tree1.png');
+    this.load.image('arbol_rosa3', 'img/mundo/FloatingIslands_Assets/AssetsPink/Tree3.png');
+    this.load.image('arbusto1', 'img/mundo/FloatingIslands_Assets/AssetsPink/BackgroundBushes1.png');
+    this.load.image('arbusto4', 'img/mundo/FloatingIslands_Assets/AssetsPink/BackgroundBushes4.png');
+    this.load.image('poste', 'img/mundo/FloatingIslands_Assets/AssetsPink/Pole.png');
+    this.load.image('puente_izq', 'img/mundo/FloatingIslands_Assets/AssetsPink/BridgeLeft.png');
+    this.load.image('puente_cen', 'img/mundo/FloatingIslands_Assets/AssetsPink/BridgeMiddle.png');
+    this.load.image('puente_der', 'img/mundo/FloatingIslands_Assets/AssetsPink/BridgeRight.png');
+    this.load.image('edificio', 'img/mundo/FloatingIslands_Assets/AssetsPink/Building1_Front.png');
+    this.load.image('planta5', 'img/mundo/FloatingIslands_Assets/AssetsPink/Plant5.png');
+
+    // Banda sonora (vive en src/music/)
+    this.load.audio('mammamia', 'src/music/mammamia8bits.mp3');
 };
 
 GameScene.prototype.create = function() {
