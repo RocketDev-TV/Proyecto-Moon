@@ -3,35 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regalo Especial - Proyecto Moon 🌙</title>
-    <!-- FUENTE RETRO ARCADE OFICIAL -->
+    <title>Moon Arcade 🌙</title>
+    <link rel="icon" type="image/png" href="../img/fantasma.png">
+    
+    <!-- Vinculación del archivo CSS externo -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Fuentes tipográficas externas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #07050f;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            font-family: 'Press Start 2P', monospace;
-        }
-        #game-container {
-            border: 6px solid #3a2f5c;
-            border-radius: 8px;
-            box-shadow: 0px 0px 35px rgba(110, 85, 201, 0.4);
-            background-color: #000;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
 </head>
 <body>
 
     <div id="game-container"></div>
 
+    <!-- 1. Librería del Motor Gráfico Phaser -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    
+    <!-- 2. Cliente Oficial del SDK de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- 3. Módulos de Inicialización y Lógica del Servidor -->
+    <script src="../js/supab-config.js"></script>
+    <script src="../js/api.js"></script>
+    
+    <!-- 4. Núcleo del Videojuego -->
     <script src="../js/game.js"></script>
+
 </body>
 </html>
-

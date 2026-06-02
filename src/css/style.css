@@ -1,0 +1,111 @@
+/* =====================================================================
+ * ESTILOS GENERALES Y MARCO NEÓN ARCADE (MOON ARCADE PRO)
+ * ===================================================================== */
+body {
+    margin: 0;
+    background-color: #0b081d; /* Negro azulado profundo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#game-container {
+    width: 800px;
+    height: 600px;
+    position: relative;
+    
+    /* El marco de brillo neón restaurado */
+    border: 4px double #ffffff; 
+    border-radius: 6px;
+    box-shadow: 0 0 25px #b03b7b, 
+                0 0 10px #1a153a, 
+                inset 0 0 30px rgba(0, 0, 0, 0.8);
+    background-color: #1a153a;
+    transition: box-shadow 0.3s ease;
+}
+
+#game-container:hover {
+    box-shadow: 0 0 35px #ffb3d9, 
+                0 0 15px #b03b7b, 
+                inset 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+/* =====================================================================
+ * INTERFAZ DE MODALES ARCADE (PIXEL-ART CRITICAL FIX)
+ * ===================================================================== */
+.arcade-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Fondo oscuro traslúcido sobre el juego */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    font-family: 'Press Start 2P', monospace;
+}
+
+.arcade-modal {
+    background: #110d26;
+    border: 4px double #ffffff;
+    padding: 25px;
+    width: 420px; /* Un poco más ancho para evitar desbordes */
+    text-align: center;
+    box-shadow: 0 0 15px #b03b7b;
+    box-sizing: border-box;
+}
+
+.arcade-title {
+    color: #ffeb5c;
+    font-size: 12px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.arcade-msg {
+    color: #ffffff;
+    font-size: 9px;
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+.arcade-input {
+    width: 90%;
+    background: #000000;
+    border: 2px solid #b03b7b;
+    padding: 10px;
+    color: #6bff6b;
+    text-align: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    outline: none;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    box-sizing: border-box;
+}
+
+.arcade-btn-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.arcade-btn {
+    background: #1a153a;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    padding: 10px 18px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.arcade-btn:hover {
+    background: #b03b7b;
+    color: #ffeb5c;
+}
