@@ -1,5 +1,5 @@
 /* =====================================================================
- * 🕹️ ESTILOS GENERALES Y CENTRADO DE CABINA (ANTI-DESFASAMIENTO PC)
+ * ESTILOS GENERALES Y CENTRADO DE CABINA (ANTI-DESFASAMIENTO PC)
  * ===================================================================== */
 body {
     margin: 0;
@@ -14,9 +14,11 @@ body {
 
 #game-container {
     position: relative;
-    /* 📐 GEOMETRÍA FIJA 4:3: Mantiene proporciones idénticas en PC y móviles */
-    width: min(800px, 92vw, calc(84vh * 4 / 3));
-    height: min(600px, 84vh, calc(92vw * 3 / 4));
+    
+    /* FORMULA MAESTRA UNIFICADA: Calcula la base ideal en un solo eje para forzar 4:3 real en iOS */
+    --ideal-width: min(800px, 92vw, calc(84vh * 4 / 3));
+    width: var(--ideal-width);
+    height: calc(var(--ideal-width) * 3 / 4);
     
     /* El legendario marco de brillo neón retro */
     border: 4px double #ffffff; 
@@ -28,7 +30,7 @@ body {
     box-sizing: border-box;
 }
 
-/* 🎯 CORRECCIÓN DE MOTOR: Bloquea el canvas de Phaser al marco neón en PC */
+/* CORRECCIÓN DE MOTOR: Bloquea el canvas de Phaser al marco neón en PC */
 #game-container canvas {
     display: block !important;
     width: 100% !important;
@@ -38,8 +40,9 @@ body {
     left: 0 !important;
 }
 
+
 /* =====================================================================
- * 💬 INTERFAZ DE MODALES ARCADE (PIXEL-ART)
+ * INTERFAZ DE MODALES ARCADE (PIXEL-ART)
  * ===================================================================== */
 .arcade-modal-overlay {
     position: absolute;
@@ -118,7 +121,7 @@ body {
 }
 
 /* =====================================================================
- * 🔄 PANTALLA DE BLOQUEO DE ORIENTACIÓN (ANTI-PORTRAIT MOBILE)
+ * PANTALLA DE BLOQUEO DE ORIENTACIÓN (ANTI-PORTRAIT MOBILE)
  * ===================================================================== */
 #rotation-overlay {
     display: none;
@@ -170,7 +173,7 @@ body {
 }
 
 /* =====================================================================
- * 🕹️ GAMEPAD DIGITAL ORIGINAL: TRASLÚCIDO Y AUTO-ESCALABLE POR VMIN
+ * GAMEPAD DIGITAL ORIGINAL: TRASLÚCIDO Y AUTO-ESCALABLE POR VMIN
  * ===================================================================== */
 #mobile-gamepad {
     display: none; /* Oculto en PC por defecto */

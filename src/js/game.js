@@ -1,5 +1,5 @@
 // =====================================================================
-// 🌙 NÚCLEO OPERATIVO DEL JUEGO: MOON ARCADE MOTOR (MOBILE OPTIMIZED)
+// NÚCLEO OPERATIVO DEL JUEGO: MOON ARCADE MOTOR (MOBILE OPTIMIZED)
 // =====================================================================
 (function() {
 
@@ -92,7 +92,13 @@ MenuScene.prototype.create = function() {
     this.tweens.add({ targets: [btnJugar, txtJugar], scaleX: 1.04, scaleY: 1.04, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     btnJugar.on('pointerover', () => { btnJugar.setStrokeStyle(3, 0xffb3d9); txtJugar.setStyle({ fill: '#ffeb5c' }); });
     btnJugar.on('pointerout', () => { btnJugar.setStrokeStyle(3, 0xffffff); txtJugar.setStyle({ fill: '#ffffff' }); });
-    btnJugar.on('pointerdown', () => this.scene.start('GameScene'));
+    // PARCHE DE AUDIO MOBILE: Despierta el AudioContext suspendido de iOS/Android al presionar el botón
+    bbtnJugar.on('pointerdown', () => {
+        if (this.sound && this.sound.context && this.sound.context.state === 'suspended') {
+            this.sound.context.resume();
+        }
+        this.scene.start('GameScene');
+    });
 
     const btnLeaderboard = this.add.text(400, 480, '🏆 VER TABLA DE SCORES', { fontFamily: '"Press Start 2P"', fontSize: '11px', fill: '#ffeb5c' }).setOrigin(0.5).setInteractive();
     this.tweens.add({ targets: btnLeaderboard, alpha: 0.6, duration: 750, yoyo: true, repeat: -1 });
@@ -132,7 +138,7 @@ GameScene.prototype.preload = function() {
 };
 
 GameScene.prototype.create = function() {
-    // 🚀 MULTI-TOUCH FIX: Habilita punteros adicionales concurrentes en pantallas táctiles
+    // MULTI-TOUCH FIX: Habilita punteros adicionales concurrentes en pantallas táctiles
     this.input.addPointer(2);
 
     if (!musicaFondo) {
@@ -356,7 +362,7 @@ GameScene.prototype.nextLevelTransition = function() {
 };
 
 // =====================================================================
-// 🎬 ESCENA 3: PANTALLA DE RESULTADOS FINALES (SECURE VAULT MODE)
+// ESCENA 3: PANTALLA DE RESULTADOS FINALES (SECURE VAULT MODE)
 // =====================================================================
 function WinScene() { Phaser.Scene.call(this, { key: 'WinScene' }); }
 WinScene.prototype = Object.create(Phaser.Scene.prototype);
@@ -394,7 +400,7 @@ WinScene.prototype.create = function() {
             return;
         }
 
-        abrirPromptArcade('🔒 BÓVEDA', 'Introduce el código de acceso remoto:', async (llave) => {
+        abrirPromptArcade('🔒', 'Introduce el código de acceso remoto:', async (llave) => {
             if (!llave || llave.trim() === '') return;
 
             if (supabaseClient) {
@@ -422,7 +428,7 @@ WinScene.prototype.create = function() {
 };
 
 // =====================================================================
-// 🎬 ESCENA 4: TABLA DE SCORES RETRO (LEADERBOARD)
+// ESCENA 4: TABLA DE SCORES RETRO (LEADERBOARD)
 // =====================================================================
 function LeaderboardScene() { Phaser.Scene.call(this, { key: 'LeaderboardScene' }); }
 LeaderboardScene.prototype = Object.create(Phaser.Scene.prototype);
