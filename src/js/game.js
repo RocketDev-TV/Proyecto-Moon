@@ -1,5 +1,5 @@
 // =====================================================================
-// 🌙 NÚCLEO OPERATIVO DEL JUEGO: MOON ARCADE MOTOR (FINAL SECURE EDITION)
+// 🌙 NÚCLEO OPERATIVO DEL JUEGO: MOON ARCADE MOTOR (MOBILE OPTIMIZED)
 // =====================================================================
 (function() {
 
@@ -9,6 +9,10 @@ const config = {
     height: 600,
     parent: 'game-container',
     render: { pixelArt: true },
+    // 📊 SCALE MANAGER: Adapta el juego de forma responsiva y lo centra en la pantalla
+    scale: {
+        mode: Phaser.Scale.FIT,
+    },
     physics: {
         default: 'arcade',
         arcade: { gravity: { y: 750 }, debug: false }
@@ -128,6 +132,9 @@ GameScene.prototype.preload = function() {
 };
 
 GameScene.prototype.create = function() {
+    // 🚀 MULTI-TOUCH FIX: Habilita punteros adicionales concurrentes en pantallas táctiles
+    this.input.addPointer(2);
+
     if (!musicaFondo) {
         musicaFondo = this.sound.add('mammamia', { loop: true, volume: 0.4 });
         musicaFondo.play();
@@ -219,18 +226,65 @@ GameScene.prototype.create = function() {
         this.audioBtn.setStyle({ fill: musicaSilenciada ? '#ff6b6b' : '#6bff6b' });
     });
 
-    if (this.sys.game.device.input.touch && !this.sys.game.device.os.desktop) {
-        let btnIzq = this.add.circle(70, 500, 45, 0xffffff, 0.2).setInteractive().setDepth(21);
-        btnIzq.on('pointerdown', () => this.touchLeft = true); btnIzq.on('pointerup', () => this.touchLeft = false); btnIzq.on('pointerout', () => this.touchLeft = false);
-        this.add.text(70, 500, '◀', { fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5).setDepth(22);
+    // =====================================================================
+    // ENLACE DE CONTROLES EXTERNOS HTML (SISTEMA DE EVENTOS WEB)
+    // =====================================================================
+    const leftBtn = document.getElementById('btn-left');
+    const rightBtn = document.getElementById('btn-right');
+    const jumpBtn = document.getElementById('btn-jump');
 
-        let btnDer = this.add.circle(180, 500, 45, 0xffffff, 0.2).setInteractive().setDepth(21);
-        btnDer.on('pointerdown', () => this.touchRight = true); btnDer.on('pointerup', () => this.touchRight = false); btnDer.on('pointerout', () => this.touchRight = false);
-        this.add.text(180, 500, '▶', { fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5).setDepth(22);
+    if (leftBtn && rightBtn && jumpBtn) {
+        // Manejador del Botón Izquierda
+        leftBtn.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            this.touchLeft = true; 
+            leftBtn.classList.add('pressed'); 
+        });
+        leftBtn.addEventListener('touchend', (e) => { 
+            e.preventDefault(); 
+            this.touchLeft = false; 
+            leftBtn.classList.remove('pressed'); 
+        });
+        leftBtn.addEventListener('touchcancel', (e) => { 
+            e.preventDefault(); 
+            this.touchLeft = false; 
+            leftBtn.classList.remove('pressed'); 
+        });
 
-        let btnJump = this.add.rectangle(700, 500, 110, 80, 0xffeb5c, 0.3).setInteractive().setDepth(21).setStrokeStyle(3, 0xffffff);
-        this.add.text(700, 500, 'SALTO', { fontFamily: '"Press Start 2P"', fontSize: '11px', fill: '#ffffff' }).setOrigin(0.5).setDepth(22);
-        btnJump.on('pointerdown', () => { if (this.player.body.touching.down) this.player.setVelocityY(-460); });
+        // Manejador del Botón Derecha
+        rightBtn.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            this.touchRight = true; 
+            rightBtn.classList.add('pressed'); 
+        });
+        rightBtn.addEventListener('touchend', (e) => { 
+            e.preventDefault(); 
+            this.touchRight = false; 
+            rightBtn.classList.remove('pressed'); 
+        });
+        rightBtn.addEventListener('touchcancel', (e) => { 
+            e.preventDefault(); 
+            this.touchRight = false; 
+            rightBtn.classList.remove('pressed'); 
+        });
+
+        // Manejador de Salto Remoto Instantáneo (Multi-touch natively supported)
+        jumpBtn.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            jumpBtn.classList.add('pressed');
+            // Si Aylin toca el piso, ejecuta el impulso gravitacional de inmediato
+            if (this.player.body.touching.down) {
+                this.player.setVelocityY(-460); 
+            }
+        });
+        jumpBtn.addEventListener('touchend', (e) => { 
+            e.preventDefault(); 
+            jumpBtn.classList.remove('pressed'); 
+        });
+        jumpBtn.addEventListener('touchcancel', (e) => { 
+            e.preventDefault(); 
+            jumpBtn.classList.remove('pressed'); 
+        });
     }
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -333,7 +387,6 @@ WinScene.prototype.create = function() {
     const retryBtn = this.add.text(400, 490, '< VOLVER A JUGAR >', { fontFamily: '"Press Start 2P"', fontSize: '11px', fill: '#ffffff' }).setOrigin(0.5).setInteractive();
     retryBtn.on('pointerdown', () => this.scene.start('GameScene'));
 
-    // 🔒 100% CORREGIDO: Removido 'window.' de la llamada de Supabase para enlazar de forma nativa a la instancia remota
     const btnSecreto = this.add.text(770, 560, '[ 🔑 ]', { fontFamily: '"Press Start 2P"', fontSize: '10px', fill: '#2a1f4d' }).setOrigin(1, 1).setInteractive();
     btnSecreto.on('pointerdown', () => {
         if (localStorage.getItem('vault_permanently_locked') === 'true') {
@@ -341,7 +394,7 @@ WinScene.prototype.create = function() {
             return;
         }
 
-        abrirPromptArcade('🔒', 'Introduce el código de acceso remoto:', async (llave) => {
+        abrirPromptArcade('🔒 BÓVEDA', 'Introduce el código de acceso remoto:', async (llave) => {
             if (!llave || llave.trim() === '') return;
 
             if (supabaseClient) {
@@ -369,7 +422,7 @@ WinScene.prototype.create = function() {
 };
 
 // =====================================================================
-// ESCENA 4: TABLA DE SCORES RETRO (LEADERBOARD)
+// 🎬 ESCENA 4: TABLA DE SCORES RETRO (LEADERBOARD)
 // =====================================================================
 function LeaderboardScene() { Phaser.Scene.call(this, { key: 'LeaderboardScene' }); }
 LeaderboardScene.prototype = Object.create(Phaser.Scene.prototype);

@@ -1,39 +1,45 @@
 /* =====================================================================
- * ESTILOS GENERALES Y MARCO NEÓN ARCADE (MOON ARCADE PRO)
+ * 🕹️ ESTILOS GENERALES Y CENTRADO DE CABINA (ANTI-DESFASAMIENTO PC)
  * ===================================================================== */
 body {
     margin: 0;
-    background-color: #0b081d; /* Negro azulado profundo */
+    background-color: #0b081d; /* Negro azulado profundo de la cabina */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 100vw;
     overflow: hidden;
 }
 
 #game-container {
-    width: 800px;
-    height: 600px;
     position: relative;
+    /* 📐 GEOMETRÍA FIJA 4:3: Mantiene proporciones idénticas en PC y móviles */
+    width: min(800px, 92vw, calc(84vh * 4 / 3));
+    height: min(600px, 84vh, calc(92vw * 3 / 4));
     
-    /* El marco de brillo neón restaurado */
+    /* El legendario marco de brillo neón retro */
     border: 4px double #ffffff; 
     border-radius: 6px;
     box-shadow: 0 0 25px #b03b7b, 
                 0 0 10px #1a153a, 
                 inset 0 0 30px rgba(0, 0, 0, 0.8);
     background-color: #1a153a;
-    transition: box-shadow 0.3s ease;
+    box-sizing: border-box;
 }
 
-#game-container:hover {
-    box-shadow: 0 0 35px #ffb3d9, 
-                0 0 15px #b03b7b, 
-                inset 0 0 30px rgba(0, 0, 0, 0.9);
+/* 🎯 CORRECCIÓN DE MOTOR: Bloquea el canvas de Phaser al marco neón en PC */
+#game-container canvas {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
 }
 
 /* =====================================================================
- * INTERFAZ DE MODALES ARCADE (PIXEL-ART CRITICAL FIX)
+ * 💬 INTERFAZ DE MODALES ARCADE (PIXEL-ART)
  * ===================================================================== */
 .arcade-modal-overlay {
     position: absolute;
@@ -41,7 +47,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8); /* Fondo oscuro traslúcido sobre el juego */
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,7 +59,8 @@ body {
     background: #110d26;
     border: 4px double #ffffff;
     padding: 25px;
-    width: 420px; /* Un poco más ancho para evitar desbordes */
+    width: 90%;
+    max-width: 420px;
     text-align: center;
     box-shadow: 0 0 15px #b03b7b;
     box-sizing: border-box;
@@ -108,4 +115,126 @@ body {
 .arcade-btn:hover {
     background: #b03b7b;
     color: #ffeb5c;
+}
+
+/* =====================================================================
+ * 🔄 PANTALLA DE BLOQUEO DE ORIENTACIÓN (ANTI-PORTRAIT MOBILE)
+ * ===================================================================== */
+#rotation-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0b081d;
+    z-index: 99999;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Press Start 2P', monospace;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.rotation-icon {
+    font-size: 40px;
+    margin-bottom: 25px;
+    animation: rotarIcono 2s infinite ease-in-out;
+}
+
+.rotation-text {
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.rotation-sub {
+    font-size: 9px;
+    color: #ffb3d9;
+    margin-top: 15px;
+}
+
+@keyframes rotarIcono {
+    0% { transform: rotate(0deg); }
+    40% { transform: rotate(90deg); }
+    50% { transform: rotate(90deg); }
+    90% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@media (max-width: 1024px) and (orientation: portrait) {
+    #rotation-overlay { display: flex; }
+    #game-container { display: none; }
+}
+
+/* =====================================================================
+ * 🕹️ GAMEPAD DIGITAL ORIGINAL: TRASLÚCIDO Y AUTO-ESCALABLE POR VMIN
+ * ===================================================================== */
+#mobile-gamepad {
+    display: none; /* Oculto en PC por defecto */
+}
+
+@media (max-width: 1024px) and (orientation: landscape) {
+    #mobile-gamepad {
+        display: flex;
+        position: fixed;
+        bottom: calc(env(safe-area-inset-bottom, 16px) + 3vh);
+        left: 0;
+        width: 100vw;
+        padding: 0 5vw; 
+        justify-content: space-between;
+        align-items: flex-end;
+        box-sizing: border-box;
+        z-index: 9999;
+        pointer-events: none; 
+    }
+
+    .gamepad-side {
+        display: flex;
+        pointer-events: auto; 
+        gap: 3.5vmin;
+        align-items: center;
+    }
+
+    .arcade-btn-touch {
+        width: clamp(58px, 12vmin, 76px);
+        height: clamp(58px, 12vmin, 76px);
+        background: rgba(26, 21, 58, 0.45);
+        border: 2px solid rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Press Start 2P', monospace;
+        font-size: clamp(14px, 3.5vmin, 20px);
+        user-select: none;
+        -webkit-user-select: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.1s ease, transform 0.05s ease, border-color 0.1s ease;
+        cursor: pointer;
+    }
+
+    .arcade-btn-touch:active, .arcade-btn-touch.pressed {
+        transform: scale(0.9);
+        background: rgba(176, 59, 123, 0.85);
+        border-color: #ffb3d9;
+        color: #ffeb5c;
+        box-shadow: 0 0 15px #ffb3d9;
+    }
+
+    .jump-core {
+        width: clamp(76px, 15vmin, 95px);
+        height: clamp(76px, 15vmin, 95px);
+        background: rgba(255, 42, 95, 0.4);
+        border: 2px solid #ffffff;
+        font-size: clamp(9px, 2vmin, 11px);
+    }
+
+    .jump-core:active, .jump-core.pressed {
+        background: rgba(255, 42, 95, 0.85);
+        box-shadow: 0 0 20px #ff3366;
+    }
 }

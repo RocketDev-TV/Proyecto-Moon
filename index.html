@@ -4,30 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moon Arcade 🌙</title>
-    <!-- Icono del fantasma corregido según tu árbol de archivos -->
     <link rel="icon" type="image/png" href="src/img/fantasma.png">
     <link rel="stylesheet" href="src/css/style.css">
     
-    <!-- Fuentes tipográficas externas -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <!-- Pantalla inteligente de bloqueo de orientación -->
+    <div id="rotation-overlay">
+        <div class="rotation-icon">🔄</div>
+        <div class="rotation-text">POR FAVOR</div>
+        <div class="rotation-text" style="color: #ffeb5c;">GIRA TU DISPOSITIVO</div>
+        <div class="rotation-sub">PARA PODER JUGAR</div>
+    </div>
+
+    <!-- Contenedor del lienzo de Phaser -->
     <div id="game-container"></div>
 
-    <!-- 1. Librería del Motor Gráfico Phaser -->
+    <!-- NUEVO FEATURES: Gamepad virtual externo de alta sensibilidad -->
+    <div id="mobile-gamepad">
+        <div class="gamepad-side left-side">
+            <div id="btn-left" class="arcade-btn-touch">◀</div>
+            <div id="btn-right" class="arcade-btn-touch">▶</div>
+        </div>
+        <div class="gamepad-side right-side">
+            <div id="btn-jump" class="arcade-btn-touch jump-core">⚡ JUMP</div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
-    
-    <!-- 2. Cliente Oficial del SDK de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- 3. Lógica del Servidor (Rutas planas sin la carpeta html) -->
     <script src="src/js/supab-config.js"></script>
     <script src="src/js/api.js"></script>
-    
-    <!-- 4. Núcleo del Videojuego -->
     <script src="src/js/game.js"></script>
 
 </body>
