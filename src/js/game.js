@@ -69,6 +69,9 @@ function MenuScene() { Phaser.Scene.call(this, { key: 'MenuScene' }); }
 MenuScene.prototype = Object.create(Phaser.Scene.prototype);
 MenuScene.prototype.constructor = MenuScene;
 
+// =====================================================================
+// ESCENA 1: MENÚ DE INICIO (AUDIO & RESPONSIVE FIX)
+// =====================================================================
 MenuScene.prototype.create = function() {
     const fondo = this.add.graphics();
     fondo.fillGradientStyle(0x1a153a, 0x1a153a, 0xb03b7b, 0xb03b7b, 1);
@@ -92,8 +95,9 @@ MenuScene.prototype.create = function() {
     this.tweens.add({ targets: [btnJugar, txtJugar], scaleX: 1.04, scaleY: 1.04, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     btnJugar.on('pointerover', () => { btnJugar.setStrokeStyle(3, 0xffb3d9); txtJugar.setStyle({ fill: '#ffeb5c' }); });
     btnJugar.on('pointerout', () => { btnJugar.setStrokeStyle(3, 0xffffff); txtJugar.setStyle({ fill: '#ffffff' }); });
-    // PARCHE DE AUDIO MOBILE: Despierta el AudioContext suspendido de iOS/Android al presionar el botón
-    bbtnJugar.on('pointerdown', () => {
+    
+    // CORREGIDO: Se quitó la 'b' extra para limpiar el ReferenceError
+    btnJugar.on('pointerdown', () => {
         if (this.sound && this.sound.context && this.sound.context.state === 'suspended') {
             this.sound.context.resume();
         }
