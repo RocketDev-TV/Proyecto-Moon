@@ -1,5 +1,5 @@
 /* =====================================================================
- * 🕹️ ESTILOS GENERALES Y CENTRADO DE CABINA (ANTI-DESFASAMIENTO PC/iOS)
+ * ESTILOS GENERALES Y CENTRADO DE CABINA (ANTI-DESFASAMIENTO PC/iOS)
  * ===================================================================== */
 body {
     margin: 0;
@@ -14,7 +14,7 @@ body {
 
 #game-container {
     position: relative;
-    /* 📐 FÓRMULA MAESTRA MULTIPLATAFORMA: Directa sin variables para no romper Safari */
+    /* FÓRMULA MAESTRA MULTIPLATAFORMA: Directa sin variables para no romper Safari */
     width: min(800px, 95vw, calc(85vh * 4 / 3));
     height: min(600px, calc(95vw * 3 / 4), 85vh);
     
@@ -28,7 +28,7 @@ body {
     box-sizing: border-box;
 }
 
-/* 🎯 CORRECCIÓN DE MOTOR: Blindaje interno del canvas */
+/* CORRECCIÓN DE MOTOR: Blindaje interno del canvas */
 #game-container canvas {
     display: block !important;
     width: 100% !important;
@@ -40,7 +40,7 @@ body {
 }
 
 /* =====================================================================
- * 💬 INTERFAZ DE MODALES ARCADE (PIXEL-ART)
+ * INTERFAZ DE MODALES ARCADE (PIXEL-ART)
  * ===================================================================== */
 .arcade-modal-overlay {
     position: absolute;
@@ -165,20 +165,19 @@ body {
     100% { transform: rotate(0deg); }
 }
 
-/* 🚀 FIX: Ampliado a 1400px para cubrir todas las iPads verticales */
 @media (max-width: 1400px) and (orientation: portrait) {
     #rotation-overlay { display: flex; }
     #game-container { display: none; }
 }
 
 /* =====================================================================
- * 🕹️ GAMEPAD DIGITAL ORIGINAL: TRASLÚCIDO Y AUTO-ESCALABLE POR VMIN
+ * GAMEPAD DIGITAL ORIGINAL: TRASLÚCIDO Y AUTO-ESCALABLE POR VMIN
  * ===================================================================== */
 #mobile-gamepad {
     display: none; /* Oculto por defecto en monitores de PC completos */
 }
 
-/* 🔥 SOPORTE PARA TABLETS Y MÓVILES (Ampliamos a 1400px para cubrir iPads Pro) */
+/* SOPORTE PARA TABLETS Y MÓVILES (Ampliamos a 1400px para cubrir iPads Pro) */
 @media (max-width: 1400px) and (orientation: landscape) {
     #mobile-gamepad {
         display: flex;

@@ -25,7 +25,7 @@ const game = new Phaser.Game(config);
 let musicaFondo = null;
 let musicaSilenciada = false;
 
-// UI Modals HTML/CSS Helpers
+// UI Modals HTML/CSS 
 function abrirPromptArcade(titulo, mensaje, callback) {
     const contenedorJuego = document.getElementById('game-container') || document.body;
     const overlay = document.createElement('div');
@@ -51,15 +51,25 @@ function abrirPromptArcade(titulo, mensaje, callback) {
     const inputElement = document.getElementById('arcadeInput');
     inputElement.focus();
 
-    document.getElementById('arcadeOk').onclick = () => {
+    // FIX TÁCTIL: Usamos pointerdown en lugar de onclick para respuesta instantánea
+    const btnOk = document.getElementById('arcadeOk');
+    const btnCancel = document.getElementById('arcadeCancel');
+
+    const confirmarAccion = (e) => {
+        e.preventDefault(); // Evita clics fantasmas en móviles
         const val = inputElement.value;
         overlay.remove();
         callback(val);
     };
-    document.getElementById('arcadeCancel').onclick = () => {
+
+    const cancelarAccion = (e) => {
+        e.preventDefault();
         overlay.remove();
         callback(null);
     };
+
+    btnOk.addEventListener('pointerdown', confirmarAccion);
+    btnCancel.addEventListener('pointerdown', cancelarAccion);
 }
 
 // =====================================================================
