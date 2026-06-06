@@ -14,9 +14,9 @@ body {
 
 #game-container {
     position: relative;
-    /* 📐 DESKTOP DEFAULT */
-    width: 800px;
-    height: 600px;
+    /* 📐 FÓRMULA MAESTRA MULTIPLATAFORMA: Directa sin variables para no romper Safari */
+    width: min(800px, 95vw, calc(85vh * 4 / 3));
+    height: min(600px, calc(95vw * 3 / 4), 85vh);
     
     /* El legendario marco de brillo neón retro */
     border: 4px double #ffffff; 
@@ -28,11 +28,12 @@ body {
     box-sizing: border-box;
 }
 
-/* 🎯 CORRECCIÓN DE MOTOR: Bloquea el canvas de Phaser al marco neón */
+/* 🎯 CORRECCIÓN DE MOTOR: Blindaje interno del canvas */
 #game-container canvas {
     display: block !important;
     width: 100% !important;
     height: 100% !important;
+    object-fit: contain !important; /* 🚀 EXTRA FIX: Fuerza a que el render interno nunca se deforme */
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
@@ -164,30 +165,25 @@ body {
     100% { transform: rotate(0deg); }
 }
 
-@media (max-width: 1024px) and (orientation: portrait) {
+/* 🚀 FIX: Ampliado a 1400px para cubrir todas las iPads verticales */
+@media (max-width: 1400px) and (orientation: portrait) {
     #rotation-overlay { display: flex; }
     #game-container { display: none; }
 }
 
 /* =====================================================================
- * 📱 BLINDAJE RESPONSIVO DINÁMICO PARA MÓVILES Y TABLETS (LANDSCAPE)
+ * 🕹️ GAMEPAD DIGITAL ORIGINAL: TRASLÚCIDO Y AUTO-ESCALABLE POR VMIN
  * ===================================================================== */
-@media (max-width: 1024px) and (orientation: landscape) {
-    #game-container {
-        /* 🚀 SAFARI FIX: Forzamos la proporción matemática 4:3 amarrada puramente al alto del teléfono */
-        height: 82vh;
-        width: calc(82vh * 4 / 3);
-        max-width: 92vw;
-        max-height: 90vh;
-    }
+#mobile-gamepad {
+    display: none; /* Oculto por defecto en monitores de PC completos */
+}
 
-    /* =====================================================================
-     * 🕹️ GAMEPAD DIGITAL ORIGINAL: TRASLÚCIDO Y AUTO-ESCALABLE POR VMIN
-     * ===================================================================== */
+/* 🔥 SOPORTE PARA TABLETS Y MÓVILES (Ampliamos a 1400px para cubrir iPads Pro) */
+@media (max-width: 1400px) and (orientation: landscape) {
     #mobile-gamepad {
         display: flex;
         position: fixed;
-        bottom: calc(env(safe-area-inset-bottom, 16px) + 3vh);
+        bottom: calc(env(safe-area-inset-bottom, 15px) + 3vh);
         left: 0;
         width: 100vw;
         padding: 0 5vw; 
@@ -201,13 +197,13 @@ body {
     .gamepad-side {
         display: flex;
         pointer-events: auto; 
-        gap: 3.5vmin;
+        gap: 4vmin;
         align-items: center;
     }
 
     .arcade-btn-touch {
-        width: clamp(58px, 12vmin, 76px);
-        height: clamp(58px, 12vmin, 76px);
+        width: clamp(50px, 12vmin, 80px);
+        height: clamp(50px, 12vmin, 80px);
         background: rgba(26, 21, 58, 0.45);
         border: 2px solid rgba(255, 255, 255, 0.7);
         border-radius: 50%;
@@ -216,7 +212,7 @@ body {
         align-items: center;
         justify-content: center;
         font-family: 'Press Start 2P', monospace;
-        font-size: clamp(14px, 3.5vmin, 20px);
+        font-size: clamp(14px, 3.5vmin, 24px);
         user-select: none;
         -webkit-user-select: none;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
@@ -233,11 +229,11 @@ body {
     }
 
     .jump-core {
-        width: clamp(76px, 15vmin, 95px);
-        height: clamp(76px, 15vmin, 95px);
+        width: clamp(65px, 15vmin, 100px);
+        height: clamp(65px, 15vmin, 100px);
         background: rgba(255, 42, 95, 0.4);
         border: 2px solid #ffffff;
-        font-size: clamp(9px, 2vmin, 11px);
+        font-size: clamp(9px, 2.5vmin, 13px);
     }
 
     .jump-core:active, .jump-core.pressed {
