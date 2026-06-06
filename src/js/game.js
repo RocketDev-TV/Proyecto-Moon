@@ -51,12 +51,12 @@ function abrirPromptArcade(titulo, mensaje, callback) {
     const inputElement = document.getElementById('arcadeInput');
     inputElement.focus();
 
-    // FIX TÁCTIL: Usamos pointerdown en lugar de onclick para respuesta instantánea
+    // FIX TÁCTIL
     const btnOk = document.getElementById('arcadeOk');
     const btnCancel = document.getElementById('arcadeCancel');
 
     const confirmarAccion = (e) => {
-        e.preventDefault(); // Evita clics fantasmas en móviles
+        e.preventDefault(); // Evita clics fantasmas2
         const val = inputElement.value;
         overlay.remove();
         callback(val);
@@ -307,6 +307,16 @@ GameScene.prototype.create = function() {
         });
     }
 
+    // HUD SECRETO: Cuenta regresiva gigante central
+    this.bigTimerText = this.add.text(400, 250, '', { 
+        fontFamily: '"Press Start 2P"', 
+        fontSize: '80px', 
+        fill: '#ff3366', 
+        stroke: '#ffffff', 
+        strokeThickness: 8,
+        shadow: { offsetX: 0, offsetY: 0, color: '#ff3366', blur: 25, stroke: true, fill: true }
+    }).setOrigin(0.5).setDepth(200).setAlpha(0);
+
     this.cursors = this.input.keyboard.createCursorKeys();
 };
 
@@ -362,8 +372,37 @@ GameScene.prototype.catchObject = function(player, item) {
 };
 
 GameScene.prototype.updateClock = function() {
-    this.timeLeft--; this.timerText.setText(`TIEMPO: ${this.timeLeft}s`);
-    if (this.timeLeft <= 0) { this.spawnTimer.remove(); this.countdownTimer.remove(); this.scene.start('WinScene', { finalScore: this.score, levelReached: this.currentLevel }); }
+    this.timeLeft--; 
+    this.timerText.setText(`TIEMPO: ${this.timeLeft}s`);
+
+    // TENSIÓN ARCADE: Activar latido
+    if (this.timeLeft <= 10 && this.timeLeft > 0) {
+        this.bigTimerText.setText(this.timeLeft.toString());
+        this.bigTimerText.setAlpha(0.9);
+        this.bigTimerText.setScale(1.8);
+        
+        this.tweens.add({ 
+            targets: this.bigTimerText, 
+            scale: 1, 
+            alpha: 0.1, 
+            duration: 850, 
+            ease: 'Cubic.easeOut' 
+        });
+
+        if (this.timeLeft === 10) {
+            this.cameras.main.flash(300, 255, 50, 102); 
+        }
+    } else if (this.timeLeft > 10) {
+        // BLINDAJE EXTRA: Garantizar que el número esté oculto si hay más de 10 seg
+        this.bigTimerText.setAlpha(0);
+    }
+
+    // Terminar el juego
+    if (this.timeLeft <= 0) { 
+        this.spawnTimer.remove(); 
+        this.countdownTimer.remove(); 
+        this.scene.start('WinScene', { finalScore: this.score, levelReached: this.currentLevel }); 
+    }
 };
 
 GameScene.prototype.nextLevelTransition = function() {
@@ -371,8 +410,15 @@ GameScene.prototype.nextLevelTransition = function() {
     this.timeLeft = Math.max(45 - (this.currentLevel - 1) * 4, 15); 
     let brechaNivel = 100 + ((this.currentLevel - 1) * 50);
     this.targetScore = this.targetScore + brechaNivel; 
+    
     this.cameras.main.flash(150, 107, 255, 184);
     this.hudText.setText(`PUNTOS: ${this.score}/${this.targetScore} | LVL: ${this.currentLevel}`);
+
+    // Matar la animación del latido y esconder el texto al recuperar tiempo
+    if (this.bigTimerText) {
+        this.tweens.killTweensOf(this.bigTimerText);
+        this.bigTimerText.setAlpha(0);
+    }
 };
 
 // =====================================================================
